@@ -65,6 +65,14 @@ public class CaveDiver extends JFrame {
                 }
             }
         });
+        //End of action listeners. ================================
+        newCaveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                caveGrid.generateRandomCave(); // Regenerate the cave grid
+                System.out.println("New cave generated!");
+            }
+        });
                 
          
     }
