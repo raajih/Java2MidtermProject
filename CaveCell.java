@@ -94,7 +94,58 @@ class CaveGrid extends JComponent {
                 cave[row][col] = new CaveCell(row, col, depth);
             }
         }
-        repaint(); // Redraw the grid after generating
+        repaint(); // Redraw the grid after generating.
+    }
+
+    /**
+     * Recursively finds an escape route. 
+     * @param row The current row of cell.
+     * @param col The current column of cell.
+     * @param airRemaining The amount of air remaining (starts at 20).
+     * @param diverDepth The depth rating chosen by the user.
+     * @return True if valid path is found or false if not.
+     */
+    public boolean findEscapeRoute(int row, int col, int airRemaining, int diverDepth) {
+        // Check if out of bounds or exceeds diver's depth
+        if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE || airRemaining <= 0) {
+            return false;
+        }
+
+        CaveCell currentCell = cave[row][col];
+
+        // Check if the current cell is already part of the escape route or exceeds depth
+        if (currentCell.getIsPartOfEscapeRoute() || currentCell.getDepth() > diverDepth) {
+            return false;
+        }
+
+        // Base case: Check if we have reached the destination
+        if (row == GRID_SIZE - 1 && col == GRID_SIZE - 1) {
+            currentCell.setIsPartOfEscapeRoute(true); // Mark the destination
+            return true;
+        }
+
+        // Mark the current cell as part of the escape route
+        currentCell.setIsPartOfEscapeRoute(true);
+
+        // Recursively attempt to move down and right
+        if (findEscapeRoute(row + 1, col, airRemaining - 1, diverDepth) || 
+            findEscapeRoute(row, col + 1, airRemaining - 1, diverDepth)) {
+            return true;
+        }
+
+        // If no path was found, unmark this cell (backtrack)
+        currentCell.setIsPartOfEscapeRoute(false);
+        return false;
+    }
+
+    //Resets the routes so user can try again with multiple depth ratings.
+    public void resetEscapeRoutes() 
+    {
+        for (int row = 0; row < GRID_SIZE; row++) {
+            for (int col = 0; col < GRID_SIZE; col++) {
+                cave[row][col].setIsPartOfEscapeRoute(false); 
+            }
+        }
     }
 
     @Override
@@ -114,12 +165,27 @@ class CaveGrid extends JComponent {
                 int depth = cell.getDepth();
                 int colorValue = 255 - (depth * 25); // Deeper cells are darker blue
                 Color color = new Color(0, 0, colorValue); 
-                g.setColor(color);
+
+                // If the cell is part of the escape route, paint it red.
+                if (cell.getIsPartOfEscapeRoute()) 
+                {
+                    g.setColor(Color.RED);
+                    
+                }
+                else //If cell is not part of escape route paint it blue.
+                {
+                    color = new Color(0, 0, colorValue); // Normal color
+                    g.setColor(color);
+                }
+
+                
                 g.fillRect(xOffset + col * CELL_SIZE, yOffset + row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
                 // Draw depth in white at the top-left of the cell
                 g.setColor(Color.WHITE);
                 g.drawString(String.valueOf(depth), xOffset +  col * CELL_SIZE + 5, yOffset + row * CELL_SIZE + 15);
+
+                
             }
         }
     }

@@ -60,8 +60,26 @@ public class CaveDiver extends JFrame {
                 else 
                 {
                     int diverDepth = Integer.parseInt(depthInput);
+
+                    // Reset escape routes before attempting to find a new one
+                    caveGrid.resetEscapeRoutes();
+
+                    
                     // Call method to start escape route calculation
-                    System.out.println("Escape attempt with diver depth: " + diverDepth);
+                    boolean escapeFound = caveGrid.findEscapeRoute(0, 0, 20, diverDepth); // Start at (0,0) with 20 air remaining
+
+                    // Check if an escape route was found
+                    if (escapeFound) 
+                    {
+                        JOptionPane.showMessageDialog(CaveDiver.this, "Escape route found!");
+                    } 
+                    else 
+                    {
+                        JOptionPane.showMessageDialog(CaveDiver.this, "No escape route available.");
+                    }
+
+                    // Repaint the cave grid to show the escape route
+                    caveGrid.repaint();
                 }
             }
         });
