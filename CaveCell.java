@@ -14,7 +14,7 @@ public class CaveCell {
 
 
     /**
-     * 
+     * Constructor for a single CaveCell object.
      * @param row Holds the row number of the cell to be initialized.
      * @param col Holds the column number of the cell to be initialized.
      * @param depth Holds the depth of the cell to be initialized.
@@ -80,6 +80,9 @@ class CaveGrid extends JComponent {
     private final int CELL_SIZE = 50;
     private CaveCell[][] cave;
 
+    /**
+     * Constructor for CaveGrid which creates a 2D array of CaveCell objects.
+     */
     public CaveGrid() {
         cave = new CaveCell[GRID_SIZE][GRID_SIZE];
         setPreferredSize(new Dimension(GRID_SIZE * CELL_SIZE, GRID_SIZE * CELL_SIZE)); // Set preferred size
@@ -124,16 +127,16 @@ class CaveGrid extends JComponent {
             return true;
         }
 
-        // Mark the current cell as part of the escape route
+        // Mark the current cell as part of the escape route.
         currentCell.setIsPartOfEscapeRoute(true);
 
-        // Recursively attempt to move down and right
+        // Recursively attempt to move down and right.
         if (findEscapeRoute(row + 1, col, airRemaining - 1, diverDepth) || 
             findEscapeRoute(row, col + 1, airRemaining - 1, diverDepth)) {
             return true;
         }
 
-        // If no path was found, unmark this cell (backtrack)
+        // If no path was found, unmark this cell (backtrack).
         currentCell.setIsPartOfEscapeRoute(false);
         return false;
     }
@@ -152,7 +155,7 @@ class CaveGrid extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Calculate offsets to center the grid
+        // Calculate offsets to center the grid.
         int totalGridSize = GRID_SIZE * CELL_SIZE;
         int xOffset = (getWidth() - totalGridSize) / 2;
         int yOffset = (getHeight() - totalGridSize) / 2;

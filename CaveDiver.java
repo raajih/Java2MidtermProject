@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 
 public class CaveDiver extends JFrame {
     
+    /**
+     * Constructor that creates border layout with title, grid, buttons, and text field.
+     */
     public CaveDiver() 
     {
         //Sets title, size, and layout.
@@ -17,7 +20,7 @@ public class CaveDiver extends JFrame {
         setLayout(new BorderLayout());
 
         //Top label.
-        JLabel titleLabel = new JLabel("Underwater Cave", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Diver begins in top left corner and ends in the bottom right corner.", SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);//Places title label at the top.
 
         //Sets grid of CaveCells into the center of the layout.
@@ -64,34 +67,33 @@ public class CaveDiver extends JFrame {
                     // Reset escape routes before attempting to find a new one
                     caveGrid.resetEscapeRoutes();
 
-                    
+
                     // Call method to start escape route calculation
                     boolean escapeFound = caveGrid.findEscapeRoute(0, 0, 20, diverDepth); // Start at (0,0) with 20 air remaining
 
                     // Check if an escape route was found
-                    if (escapeFound) 
-                    {
-                        JOptionPane.showMessageDialog(CaveDiver.this, "Escape route found!");
-                    } 
-                    else 
+                    if (!escapeFound) 
                     {
                         JOptionPane.showMessageDialog(CaveDiver.this, "No escape route available.");
-                    }
+                    } 
+                    
 
                     // Repaint the cave grid to show the escape route
                     caveGrid.repaint();
                 }
             }
         });
-        //End of action listeners. ================================
+        
+        //When new cave button is pressed.
         newCaveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 caveGrid.generateRandomCave(); // Regenerate the cave grid
-                System.out.println("New cave generated!");
+                
             }
         });
-                
+               
+        //End of action listeners. ================================
          
     }
 
